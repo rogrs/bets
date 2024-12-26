@@ -5,34 +5,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class MegaSenaService {
 
 
-    public Map<String, List<String>> generateMultipleBets(int numberOfBets) {
-        Map<String, List<String>> bets = new LinkedHashMap<>();
+    public Map<String, List<Integer>> generateMultipleBets(int numberOfBets, int numbersPerBet) {
+        if (numbersPerBet < 6 || numbersPerBet > 9) {
+            throw new IllegalArgumentException("The number of numbers per bet must be between 6 and 9.");
+        }
+
+        Map<String, List<Integer>> bets = new LinkedHashMap<>();
+        Random random = new Random();
 
         for (int i = 1; i <= numberOfBets; i++) {
-            bets.put("Bet " + i, generateSingleBet());
+            List<Integer> bet = IntStream.rangeClosed(1, 60)
+                    .boxed()
+                    .collect(Collectors.toList());
+            Collections.shuffle(bet, random);
+            bets.put("Bet " + i, bet.subList(0, numbersPerBet).stream().sorted().collect(Collectors.toList()));
         }
 
         return bets;
-    }
-
-    private List<String> generateSingleBet() {
-        Random random = new Random();
-        Set<Integer> numbers = new HashSet<>();
-
-        while (numbers.size() < 6) {
-            int randomNumber = random.nextInt(60) + 1;
-            numbers.add(randomNumber);
-        }
-
-        // Formata os números como strings com dois dígitos
-        return numbers.stream()
-                .sorted()
-                .map(n -> String.format("%02d", n))
-                .collect(Collectors.toList());
     }
 }

@@ -19,14 +19,18 @@ public class MegaSenaThymeleafController {
     }
 
     @GetMapping("/")
-    public String showGeneratePage() {
+    public String showGeneratePage(Model model) {
+        model.addAttribute("numberOfBets", 1);  // Valor padrão para o número de apostas
+        model.addAttribute("numbersPerBet", 6); // Valor padrão para o número de números por aposta
         return "generate";
     }
 
     @PostMapping("/generate")
-    public String generateNumbers(@RequestParam(defaultValue = "1") Integer numberOfBets, Model model) {
+    public String generateNumbers(@RequestParam(defaultValue = "1") Integer numberOfBets,
+                                  @RequestParam(defaultValue = "6") Integer numbersPerBet,
+                                  Model model) {
         try {
-            model.addAttribute("bets", megaSenaService.generateMultipleBets(numberOfBets));
+            model.addAttribute("bets", megaSenaService.generateMultipleBets(numberOfBets, numbersPerBet));
         } catch (Exception e) {
             model.addAttribute("error", "Error generating numbers: " + e.getMessage());
         }
