@@ -12,7 +12,7 @@ public class MegaSenaService {
 
 
     public Map<String, List<Integer>> generateMultipleBets(int numberOfBets, int numbersPerBet) {
-        if (numbersPerBet < 6 || numbersPerBet > 9) {
+        if (numbersPerBet < 6 || numbersPerBet > 20) {
             throw new IllegalArgumentException("The number of numbers per bet must be between 6 and 9.");
         }
 
